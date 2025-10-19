@@ -9,7 +9,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "build:win": "npm run build && electron-builder --win --publish=never"
+    "build:win": "npm run build && electron-builder --win "
   },
   "dependencies": {
   },
