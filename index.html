@@ -49,14 +49,76 @@
         input:focus {
             box-shadow: 0 4px 8px rgba(0,123,255,0.3);
         }
+        .tab-bar {
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            gap: 5px;
+        }
+        .tabs {
+            display: flex;
+            flex: 1;
+            gap: 2px;
+        }
+        .tab {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px 4px 0 0;
+            padding: 5px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1;
+            min-width: 1px;
+            position: relative;
+        }
+        .tab span {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .tab.active {
+            background: #fff;
+            border-bottom: none;
+        }
+        .tab .close {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            margin-left: auto;
+        }
+        .tab .close:hover {
+            color: #000;
+        }
+        .open-btn {
+            background: #4686cb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .open-btn:hover {
+            background: #357abd;
+        }
         webview {
             flex: 1;
-            width: 90%;
+            width: 100%;
             border: none;
         }
     </style>
 </head>
 <body>
+    <div class="tab-bar">
+        <div class="tabs" id="tabs"></div>
+        <button class="open-btn" id="openBtn">+</button>
+    </div>
     <div class="toolbar">
         <button id="backBtn" title="Go Back">&larr;</button>
         <button id="forwardBtn" title="Go Forward">&rarr;</button>
@@ -70,6 +132,77 @@
         const forwardBtn = document.getElementById('forwardBtn');
         const reloadBtn = document.getElementById('reloadBtn');
         const webview = document.getElementById('webview');
+        const tabsContainer = document.getElementById('tabs');
+        const openBtn = document.getElementById('openBtn');
+
+        let tabs = [];
+        let activeTabId = null;
+
+        function createTab(url = 'https://www.google.com') {
+            const tabId = Date.now().toString();
+            const tab = {
+                id: tabId,
+                url: url,
+                title: 'New Tab'
+            };
+            tabs.push(tab);
+            renderTabs();
+            switchToTab(tabId);
+            return tabId;
+        }
+
+        function renderTabs() {
+            tabsContainer.innerHTML = '';
+            tabs.forEach(tab => {
+                const tabElement = document.createElement('div');
+                tabElement.className = `tab ${tab.id === activeTabId ? 'active' : ''}`;
+                tabElement.innerHTML = `
+                    <span>${tab.title}</span>
+                    <button class="close" data-tab-id="${tab.id}">&times;</button>
+                `;
+                tabElement.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('close')) return;
+                    switchToTab(tab.id);
+                });
+                tabElement.querySelector('.close').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeTab(tab.id);
+                });
+                tabsContainer.appendChild(tabElement);
+            });
+        }
+
+        function switchToTab(tabId) {
+            activeTabId = tabId;
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) {
+                webview.src = tab.url;
+            }
+            renderTabs();
+        }
+
+        function closeTab(tabId) {
+            const index = tabs.findIndex(t => t.id === tabId);
+            if (index !== -1) {
+                tabs.splice(index, 1);
+                if (activeTabId === tabId) {
+                    if (tabs.length > 0) {
+                        switchToTab(tabs[Math.max(0, index - 1)].id);
+                    } else {
+                        createTab();
+                    }
+                }
+                renderTabs();
+            }
+        }
+
+        webview.addEventListener('dom-ready', () => {
+            const tab = tabs.find(t => t.id === activeTabId);
+            if (tab) {
+                tab.title = webview.getTitle() || 'New Tab';
+                renderTabs();
+            }
+        });
 
         input.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
@@ -81,7 +214,11 @@
                     } else {
                         url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
                     }
-                    webview.src = url;
+                    const tab = tabs.find(t => t.id === activeTabId);
+                    if (tab) {
+                        tab.url = url;
+                        webview.src = url;
+                    }
                     input.value = '';
                 }
             }
@@ -102,6 +239,13 @@
         reloadBtn.addEventListener('click', () => {
             webview.reload();
         });
+
+        openBtn.addEventListener('click', () => {
+            createTab();
+        });
+
+        // Initialize with one tab
+        createTab();
     </script>
 </body>
 </html>
