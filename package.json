@@ -1,8 +1,8 @@
 {
-  "name": "Freeze",
+  "name": "freeze-browser",
   "version": "1.0.0",
   "description": "A simple Electron browser app",
-  "license": "ISC",
+  "license": "MIT",
   "author": "",
   "type": "commonjs",
   "main": "index.js",
