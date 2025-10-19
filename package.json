@@ -1,0 +1,38 @@
+{
+  "name": "Freeze",
+  "version": "1.0.0",
+  "description": "A simple Electron browser app",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "npm run build && electron-builder --win --publish=never"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "electron-builder": "^24.13.3",
+    "electron": "^38.3.0"
+  },
+  "build": {
+    "appId": "com.freeze.browser",
+    "productName": "Freeze Browser",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

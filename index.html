@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electron Browser</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .toolbar {
+            background: linear-gradient( #4686cb);
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        input {
+            flex: 1;
+            height: 2rem;
+            padding: 0 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: box-shadow 0.3s ease;
+        }
+        input:focus {
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+        webview {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button id="backBtn" title="Go Back">&larr;</button>
+        <button id="forwardBtn" title="Go Forward">&rarr;</button>
+        <button id="reloadBtn" title="Reload">&#x21bb;</button>
+        <input id="urlInput" placeholder="Enter URL or search query" type="text">
+    </div>
+    <script>
+        const input = document.getElementById('urlInput');
+        const backBtn = document.getElementById('backBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
+
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const query = input.value.trim();
+                if (query) {
+                    let url;
+                    if (query.startsWith('http://') || query.startsWith('https://')) {
+                        url = query;
+                    } else {
+                        url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                    }
+                    window.electronAPI.loadURL(url);
+                    input.value = '';
+                }
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            window.electronAPI.goBack();
+        });
+
+        forwardBtn.addEventListener('click', () => {
+            window.electronAPI.goForward();
+        });
+
+        reloadBtn.addEventListener('click', () => {
+            window.electronAPI.reload();
+        });
+    </script>
+</body>
+</html>
