@@ -28,7 +28,8 @@
       "!dist/**/*"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/Icon.png"
     },
     "nsis": {
       "oneClick": false,
