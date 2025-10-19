@@ -53,7 +53,6 @@
             flex: 1;
             width: 90%;
             border: none;
-            overflow-y: scroll;
         }
     </style>
 </head>
@@ -64,7 +63,7 @@
         <button id="reloadBtn" title="Reload">&#x21bb;</button>
         <input id="urlInput" placeholder="Enter URL or search query" type="text">
     </div>
-    <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; overflow-y:scroll;"></webview>
+    <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; "></webview>
     <script>
         const input = document.getElementById('urlInput');
         const backBtn = document.getElementById('backBtn');
