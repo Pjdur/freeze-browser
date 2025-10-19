@@ -51,8 +51,9 @@
         }
         webview {
             flex: 1;
-            width: 100%;
+            width: 90%;
             border: none;
+            overflow-y: scroll;
         }
     </style>
 </head>
@@ -63,11 +64,13 @@
         <button id="reloadBtn" title="Reload">&#x21bb;</button>
         <input id="urlInput" placeholder="Enter URL or search query" type="text">
     </div>
+    <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; overflow-y:scroll;"></webview>
     <script>
         const input = document.getElementById('urlInput');
         const backBtn = document.getElementById('backBtn');
         const forwardBtn = document.getElementById('forwardBtn');
         const reloadBtn = document.getElementById('reloadBtn');
+        const webview = document.getElementById('webview');
 
         input.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
@@ -79,22 +82,26 @@
                     } else {
                         url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
                     }
-                    window.electronAPI.loadURL(url);
+                    webview.src = url;
                     input.value = '';
                 }
             }
         });
 
         backBtn.addEventListener('click', () => {
-            window.electronAPI.goBack();
+            if (webview.canGoBack()) {
+                webview.goBack();
+            }
         });
 
         forwardBtn.addEventListener('click', () => {
-            window.electronAPI.goForward();
+            if (webview.canGoForward()) {
+                webview.goForward();
+            }
         });
 
         reloadBtn.addEventListener('click', () => {
-            window.electronAPI.reload();
+            webview.reload();
         });
     </script>
 </body>

@@ -13,29 +13,12 @@ function createWindow () {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      webviewTag: true
     }
   })
 
   mainWindow.loadFile('index.html')
-
-  // Create BrowserView for web content
-  browserView = new BrowserView({
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true
-    }
-  })
-
-  mainWindow.setBrowserView(browserView)
-  browserView.setBounds({ x: 0, y: 50, width: 1000, height: 650 }) // Adjust for toolbar height
-  browserView.webContents.loadURL('https://www.google.com')
-
-  // Handle window resize
-  mainWindow.on('resize', () => {
-    const [width, height] = mainWindow.getSize()
-    browserView.setBounds({ x: 0, y: 50, width, height: height - 50 })
-  })
 }
 
 // IPC handlers
