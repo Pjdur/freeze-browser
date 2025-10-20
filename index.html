@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electron Browser</title>
+    <title>Freeze Browser</title>
     <style>
         body {
             margin: 0;
@@ -55,6 +55,7 @@
             align-items: center;
             padding: 5px;
             gap: 5px;
+            overflow-x: scroll;
         }
         .tabs {
             display: flex;
@@ -112,6 +113,7 @@
             width: 100%;
             border: none;
         }
+
     </style>
 </head>
 <body>
@@ -126,6 +128,7 @@
         <input id="urlInput" placeholder="Enter URL or search query" type="text">
     </div>
     <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; "></webview>
+
     <script>
         const input = document.getElementById('urlInput');
         const backBtn = document.getElementById('backBtn');
@@ -246,6 +249,8 @@
 
         // Initialize with one tab
         createTab();
+
+
     </script>
 </body>
 </html>
