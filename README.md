@@ -1,13 +1,14 @@
 # Freeze Browser
 
-A simple, secure Electron-based web browser with a clean interface and essential navigation features.
+A simple, secure Electron-based web browser with a clean interface, tabbed browsing, and essential navigation features.
 
 ## Features
 
+- **Tabbed Browsing**: Open multiple tabs, switch between them, and close tabs easily
 - **Secure Browsing**: Uses Electron's BrowserView for isolated web content rendering
 - **URL and Search Support**: Enter URLs directly or search queries (defaults to Google)
 - **Navigation Controls**: Back, forward, and reload buttons
-- **Modern UI**: Clean, responsive design with a gradient toolbar
+- **Modern UI**: Clean, responsive design with a gradient toolbar and tab bar
 - **IPC Communication**: Secure inter-process communication between main and renderer processes
 - **Cross-Platform**: Built with Electron for Windows, macOS, and Linux
 
@@ -55,11 +56,15 @@ The built application will be in the `dist` directory.
 ## How to Use
 
 1. Launch the app using `npm start`
-2. In the address bar, enter:
+2. Use the tab bar to manage tabs:
+   - Click the "+" button to open a new tab
+   - Click on a tab to switch to it
+   - Click the "×" button on a tab to close it
+3. In the address bar, enter:
    - A full URL (e.g., `https://www.example.com`)
    - A search query (e.g., `electron browser`)
-3. Press Enter to navigate
-4. Use the navigation buttons:
+4. Press Enter to navigate in the active tab
+5. Use the navigation buttons:
    - ← Back
    - → Forward
    - ↻ Reload
