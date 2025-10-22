@@ -5,9 +5,11 @@ A simple, secure Electron-based web browser with a clean interface, tabbed brows
 ## Features
 
 - **Tabbed Browsing**: Open multiple tabs, switch between them, and close tabs easily
-- **Secure Browsing**: Uses Electron's BrowserView for isolated web content rendering
+- **Secure Browsing**: Uses Electron's webview for isolated web content rendering
 - **URL and Search Support**: Enter URLs directly or search queries (defaults to Google)
 - **Navigation Controls**: Back, forward, and reload buttons
+- **Link Interception**: Links clicked in web pages open in new tabs automatically
+- **Keyboard Shortcuts**: Ctrl+T for new tab, Ctrl+W to close current tab
 - **Modern UI**: Clean, responsive design with a gradient toolbar and tab bar
 - **IPC Communication**: Secure inter-process communication between main and renderer processes
 - **Cross-Platform**: Built with Electron for Windows, macOS, and Linux
@@ -51,6 +53,21 @@ Build specifically for Windows:
 npm run build:win
 ```
 
+Build specifically for macOS:
+```bash
+npm run build:mac
+```
+
+Build specifically for Linux:
+```bash
+npm run build:linux
+```
+
+Build and unpack the application:
+```bash
+npm run build:unpack
+```
+
 The built application will be in the `dist` directory.
 
 ## How to Use
@@ -68,6 +85,10 @@ The built application will be in the `dist` directory.
    - ← Back
    - → Forward
    - ↻ Reload
+6. Use keyboard shortcuts:
+   - Ctrl+T: Open a new tab
+   - Ctrl+W: Close the current tab
+7. Links clicked in web pages will automatically open in new tabs
 
 ## Project Structure
 
@@ -76,8 +97,9 @@ freeze-browser/
 ├── index.html          # Main UI with toolbar and scripts
 ├── index.js            # Main Electron process
 ├── preload.js          # Preload script for secure IPC
+├── webview-preload.js  # Preload script for webview link interception
 ├── package.json        # Project configuration and dependencies
-├── TODO.md             # Development task list
+├── README.md           # This file
 └── dist/               # Built application output (after build)
 ```
 

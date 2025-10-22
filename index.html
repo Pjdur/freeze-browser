@@ -55,8 +55,6 @@
             align-items: center;
             padding: 5px;
             gap: 5px;
-            max-width: fit-content;
-            
         }
         .tabs {
             display: flex;
@@ -72,8 +70,8 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            flex: 1;
-            min-width: 1px;
+            min-width: 120px;
+            max-width: 200px;
             position: relative;
             text-overflow: ellipsis;
         }
@@ -129,7 +127,7 @@
         <button id="reloadBtn" title="Reload">&#x21bb;</button>
         <input id="urlInput" placeholder="Enter URL or search query" type="text">
     </div>
-    <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; "></webview>
+    <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; " preload="./webview-preload.js"></webview>
 
     <script>
         const input = document.getElementById('urlInput');
@@ -182,6 +180,7 @@
             const tab = tabs.find(t => t.id === tabId);
             if (tab) {
                 webview.src = tab.url;
+                input.value = tab.url;
             }
             renderTabs();
         }
@@ -206,6 +205,26 @@
             if (tab) {
                 tab.title = webview.getTitle() || 'New Tab';
                 renderTabs();
+            }
+        });
+
+        webview.addEventListener('did-navigate', (event) => {
+            const url = event.url;
+            input.value = url;
+            const tab = tabs.find(t => t.id === activeTabId);
+            if (tab) {
+                tab.url = url;
+            }
+        });
+
+        webview.addEventListener('new-window', (event) => {
+            event.preventDefault();
+            createTab(event.url);
+        });
+
+        webview.addEventListener('ipc-message', (event) => {
+            if (event.channel === 'open-new-tab') {
+                createTab(event.args[0]);
             }
         });
 
@@ -251,6 +270,21 @@
 
         // Initialize with one tab
         createTab();
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey) {
+                if (event.key === 't') {
+                    event.preventDefault();
+                    createTab();
+                } else if (event.key === 'w') {
+                    event.preventDefault();
+                    if (activeTabId) {
+                        closeTab(activeTabId);
+                    }
+                }
+            }
+        });
 
 
     </script>
