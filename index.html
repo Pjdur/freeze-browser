@@ -256,7 +256,11 @@
             if (tab) {
                 tab.url = url;
             }
-            // Save navigation to history
+        });
+
+        webview.addEventListener('did-finish-load', () => {
+            const url = webview.getURL();
+            // Save to history on page finish load
             window.electronAPI.saveHistory({ query: url, url });
         });
 

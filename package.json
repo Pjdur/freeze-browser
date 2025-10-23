@@ -1,6 +1,6 @@
 {
   "name": "freeze-browser",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple Electron browser app",
   "license": "MIT",
   "author": "Pjdur",
