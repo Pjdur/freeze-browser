@@ -1,6 +1,6 @@
 {
   "name": "freeze-browser",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "A simple Electron browser app",
   "license": "MIT",
   "author": "Pjdur",
@@ -11,8 +11,8 @@
     "build": "electron-builder",
     "build:win": "npm run build && electron-builder --win ",
     "build:unpack": "npm run build && electron-builder --unpack",
-    "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build build && electron-builder --linux"
   },
   "dependencies": {
   },

@@ -113,6 +113,40 @@
             width: 100%;
             border: none;
         }
+        .history-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .history-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            max-height: 80%;
+            overflow-y: auto;
+            width: 90%;
+        }
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .history-item:hover {
+            background: #f0f0f0;
+        }
+        .close-modal {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
 
     </style>
 </head>
@@ -128,6 +162,13 @@
         <input id="urlInput" placeholder="Enter URL or search query" type="text">
     </div>
     <webview id="webview" src="https://www.google.com" style="flex:1; width:100%; border:none; " preload="./webview-preload.js"></webview>
+    <div class="history-modal" id="historyModal">
+        <div class="history-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2>Search History</h2>
+            <div id="historyList"></div>
+        </div>
+    </div>
 
     <script>
         const input = document.getElementById('urlInput');
@@ -215,6 +256,8 @@
             if (tab) {
                 tab.url = url;
             }
+            // Save navigation to history
+            window.electronAPI.saveHistory({ query: url, url });
         });
 
         webview.addEventListener('new-window', (event) => {
@@ -243,6 +286,8 @@
                         tab.url = url;
                         webview.src = url;
                     }
+                    // Save to history
+                    window.electronAPI.saveHistory({ query, url });
                     input.value = '';
                 }
             }
@@ -282,7 +327,41 @@
                     if (activeTabId) {
                         closeTab(activeTabId);
                     }
+                } else if (event.key === 'h') {
+                    event.preventDefault();
+                    showHistory();
                 }
+            }
+        });
+
+        const historyModal = document.getElementById('historyModal');
+        const closeModal = document.getElementById('closeModal');
+        const historyList = document.getElementById('historyList');
+
+        function showHistory() {
+            window.electronAPI.getHistory().then(history => {
+                historyList.innerHTML = '';
+                history.reverse().forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'history-item';
+                    itemDiv.textContent = `${item.query} (${new Date(item.timestamp).toLocaleString()})`;
+                    itemDiv.addEventListener('click', () => {
+                        createTab(item.url);
+                        historyModal.style.display = 'none';
+                    });
+                    historyList.appendChild(itemDiv);
+                });
+                historyModal.style.display = 'flex';
+            });
+        }
+
+        closeModal.addEventListener('click', () => {
+            historyModal.style.display = 'none';
+        });
+
+        historyModal.addEventListener('click', (e) => {
+            if (e.target === historyModal) {
+                historyModal.style.display = 'none';
             }
         });
 

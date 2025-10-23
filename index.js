@@ -1,5 +1,7 @@
 const { app, BrowserWindow, BrowserView, ipcMain } = require('electron/main')
 const path = require('node:path')
+const fs = require('node:fs')
+const os = require('node:os')
 
 let mainWindow
 let browserView
@@ -44,6 +46,32 @@ ipcMain.on('reload', () => {
   if (browserView) {
     browserView.webContents.reload()
   }
+})
+
+ipcMain.on('save-history', (event, entry) => {
+  const historyPath = path.join(os.homedir(), 'history.json')
+  let history = []
+  if (fs.existsSync(historyPath)) {
+    try {
+      history = JSON.parse(fs.readFileSync(historyPath, 'utf8'))
+    } catch (e) {
+      history = []
+    }
+  }
+  history.push({ ...entry, timestamp: new Date().toISOString() })
+  fs.writeFileSync(historyPath, JSON.stringify(history, null, 2))
+})
+
+ipcMain.handle('get-history', () => {
+  const historyPath = path.join(os.homedir(), 'history.json')
+  if (fs.existsSync(historyPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(historyPath, 'utf8'))
+    } catch (e) {
+      return []
+    }
+  }
+  return []
 })
 
 app.whenReady().then(() => {
