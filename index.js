@@ -49,7 +49,7 @@ ipcMain.on('reload', () => {
 })
 
 ipcMain.on('save-history', (event, entry) => {
-  const historyPath = path.join(os.homedir(), 'history.json')
+  const historyPath = path.join(os.homedir(), 'history')
   let history = []
   if (fs.existsSync(historyPath)) {
     try {
@@ -63,7 +63,7 @@ ipcMain.on('save-history', (event, entry) => {
 })
 
 ipcMain.handle('get-history', () => {
-  const historyPath = path.join(os.homedir(), 'history.json')
+  const historyPath = path.join(os.homedir(), 'history')
   if (fs.existsSync(historyPath)) {
     try {
       return JSON.parse(fs.readFileSync(historyPath, 'utf8'))
